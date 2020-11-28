@@ -10,6 +10,7 @@ import {SessionStorageKeys, SessionStorageService} from '../../services/session-
 export class PlayerComponent implements OnInit {
   @Input() playerData!: FirestoreGamePlayer;
   @Input() gameData!: FirestoreGame;
+  @Input() playerNumber!: number;
 
   thisIsPlayer = false;
   thisPlayerGifts: FirestoreGameGift[] = [];

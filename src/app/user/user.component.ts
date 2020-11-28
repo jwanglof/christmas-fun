@@ -9,6 +9,7 @@ import {FirestoreGame, FirestoreGamePlayer} from '../services/firebase/models/ga
 export class UserComponent {
   @Input() playerData: FirestoreGamePlayer | null = null;
   @Input() gameData!: FirestoreGame;
+  @Input() playerNumber!: number;
 
   constructor() {}
 }
