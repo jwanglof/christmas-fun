@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1>Hej och god jul!</h1>
+      Du har kommit till min sida för julklappsleken. Du borde ha fått ett spelnamn.
+      <br>
+      Det kan du skriva in här, och trycka på din enterknapp (eller klicka på knappen):
+      <br>
+      Det är alltid första spelaren som startar spelet.
+      <br>
+
+      <ngb-alert [dismissible]="false" *ngIf="gameInvalid">
+        Felaktigt spelnamn!
+      </ngb-alert>
+
+      <form (ngSubmit)="goToGameName()">
+        <div class="form-group">
+          <label for="gameName">
+          <input type="text" class="form-control" id="gameName" name="gameNameValue" placeholder="Spelnamn" [(ngModel)]="gameNameValue">
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary">Gå med i spelet</button>
+      </form>
+
+      <h2>Regler</h2>
+      Här borde en massa regler finnas. Tjohej!
+    </div>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+<div class="container" *ngIf="!gameData">
+  <div class="row align-items-center">
+    <div class="col text-center mt-5">
+      <fa-icon [icon]="faSnowflake" [spin]="true" size="10x"></fa-icon>
+      <h1 class="mt-3">Laddar</h1>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="gameData" class="regular-game min-vh-100">
+  <div>
+    <header class="header header-footer-base py-4 w-100">
+      <div class="container">
+        <div class="row">
+          <div class="col" *ngFor="let player of this.gamePlayersFirstHalf">
+            <app-user [playerData]="player" [gameData]="gameData"></app-user>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-8">
+            <app-gifts [gameData]="gameData"></app-gifts>
+          </div>
+          <div class="col-4 text-center">
+            <div *ngIf="!gameData.started && !gameData.ended && !thisIsFirstPlayer">
+              Spelets namn: {{gameData.name}}
+              <br>
+              Vänta en stund tills alla spelare har anslutit. Det är den första spelaren som startar spelet! :)
+            </div>
+            <app-dice *ngIf="showTheDice" [gameData]="gameData"></app-dice>
+            <app-end-game-text *ngIf="showTheEndText"></app-end-game-text>
+            <app-start-game-button *ngIf="thisIsFirstPlayer && !showTheDice && !showTheEndText" [gameName]="gameName"></app-start-game-button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer header-footer-base py-4 w-100">
+      <div class="container">
+        <div class="row">
+          <div class="col" *ngFor="let player of this.gamePlayersSecondHalf">
+            <app-user [playerData]="player" [gameData]="gameData"></app-user>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>

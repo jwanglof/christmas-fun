@@ -1,0 +1,9 @@
+<form (ngSubmit)="onSubmit()">
+  <fieldset [disabled]="disabled">
+    <div class="form-group">
+      <label for="nameInput">Namn</label>
+      <input type="text" class="form-control form-control-sm" id="nameInput" placeholder="Namn" name="nameValue" [(ngModel)]="nameValue">
+    </div>
+    <button type="submit" class="btn btn-primary btn-sm btn-block" [disabled]="nameValue === '' || nameValue.length < 2">Gå med</button>
+  </fieldset>
+</form>

@@ -1,0 +1,13 @@
+<div>
+  <h1>Tärning</h1>
+  <fa-icon (click)="diceClick()" [icon]="diceValues[currentDiceNumber]" size="10x"></fa-icon>
+  <br>
+  <span *ngIf="itsMyTurn">Din tur! Klicka på tärningen för att rulla den!</span>
+  <span *ngIf="allowedToTakeGift">Härligt! Nu får du ta en julklapp!</span>
+  <span *ngIf="allowedToLooseGift">Oj oj! Nu behöver du ge bort en julklapp :(</span>
+</div>
+
+<!--<div *ngIf="gameHasStarted && gameHasEnded">-->
+<!--  <h4 class="display-4">Spelet är slut för denna gång!</h4>-->
+<!--  <h5>Hoppas du hade lite roligt iaf ❤️</h5>-->
+<!--</div>-->

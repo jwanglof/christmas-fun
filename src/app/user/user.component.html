@@ -1,0 +1,11 @@
+<!--<div *ngIf="playerData !== null">
+  <app-player *ngIf="thisIsMe" [playerData]="playerData"></app-player>
+
+  <app-player-form *ngIf="!thisIsMe" [gameNameValue]="gameNameValue"></app-player-form>
+</div>
+<div *ngIf="playerData === null">
+  <app-waiting-on-player></app-waiting-on-player>
+</div>-->
+
+<app-player *ngIf="playerData !== null" [playerData]="playerData" [gameData]="gameData"></app-player>
+<app-player-form *ngIf="playerData === null" [gameData]="gameData"></app-player-form>

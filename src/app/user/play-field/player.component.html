@@ -1,0 +1,11 @@
+<div class="card">
+  <div class="card-body" [ngClass]="{'bg-info': thisIsPlayer}">
+    <h5 class="card-title text-center">{{playerData && playerData.name}}</h5>
+    <div class="row">
+      <app-play-field-gift class="col-6"
+                           *ngFor="let gift of thisPlayerGifts"
+                           [gift]="gift"
+                           [gameData]="gameData"></app-play-field-gift>
+    </div>
+  </div>
+</div>

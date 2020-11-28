@@ -1,0 +1,13 @@
+<div class="text-center" *ngIf="gift">
+  <img class="avatar rounded-circle bg-secondary w-100"
+       src="{{giftDownloadUrl}}"
+       alt="{{gift.title}} bild">
+  <button type="button"
+          class="btn btn-outline-primary btn-block btn-sm"
+          *ngIf="allowedToTakeGift"
+          (click)="takeGift()">Ta</button>
+  <button type="button"
+          class="btn btn-outline-primary btn-block btn-sm"
+          *ngIf="allowedToLooseGift"
+          (click)="looseGift()">Ge bort</button>
+</div>
