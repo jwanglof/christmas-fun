@@ -6,9 +6,6 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./rules.component.scss']
 })
 export class RulesComponent implements OnInit {
-  isModal = false;
-  activeModal = null;
-
   constructor() { }
 
   ngOnInit(): void {
