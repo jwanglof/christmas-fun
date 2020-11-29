@@ -39,7 +39,7 @@
             </div>
             <app-dice *ngIf="showTheDice" [gameData]="gameData"></app-dice>
             <app-end-game-text *ngIf="showTheEndText"></app-end-game-text>
-            <app-start-game-button *ngIf="thisIsFirstPlayer && !showTheDice && !showTheEndText" [gameName]="gameName"></app-start-game-button>
+            <app-start-game-button *ngIf="thisIsFirstPlayer && !showTheDice && !showTheEndText" [gameData]="gameData"></app-start-game-button>
           </div>
         </div>
       </div>

@@ -16,10 +16,10 @@ export class TimerService {
     private firestoreService: FirestoreService,
   ) { }
 
-  startBackgroundTimer(gameName: string): void {
+  startBackgroundTimer(gameName: string, seconds: number): void {
     // Set the date we're counting down to
     const now = new Date();
-    const nowPlusTenMinutes = now.setSeconds(now.getSeconds() + 30);
+    const nowPlusTenMinutes = now.setSeconds(now.getSeconds() + seconds);
     // const nowPlusTenMinutes = now.setMinutes(now.getMinutes() + 10);
     console.log('Setting end time to:', nowPlusTenMinutes);
 

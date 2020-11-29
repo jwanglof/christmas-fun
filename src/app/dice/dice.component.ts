@@ -14,9 +14,7 @@ import {GiftService} from '../services/gift.service';
   styleUrls: ['./dice.component.scss']
 })
 export class DiceComponent implements OnInit, OnChanges {
-  // @Input() gameName: string | undefined;
   @Input() gameData!: FirestoreGame;
-  // @Input() currentDiceValues: FirestoreGameDiceValues | undefined;
 
   diceValues: { [key: number]: IconDefinition; } = {
     1: faDiceOne,
@@ -33,9 +31,6 @@ export class DiceComponent implements OnInit, OnChanges {
   allowedToLooseGift = false;
 
   currentTurnPlayerName: string | null = null;
-
-  // gameHasStarted = false;
-  // gameHasEnded = false;
 
   constructor(
     private firestoreService: FirestoreService,
@@ -59,17 +54,20 @@ export class DiceComponent implements OnInit, OnChanges {
 
   private _checkIfItsMyTurn(): void {
     const {currentDiceRolledPlayerUid, currentDiceNumber} = this.gameData.dice;
-    this.itsMyTurn = this.sessionStorageService.keyValueIsEqualValue(
-      SessionStorageKeys.KEY_PLAYER_UID,
-      currentDiceRolledPlayerUid);
 
-    if (!this.itsMyTurn) {
-      const currentTurnPlayer = this.gameData.players.find(player => player.uid === currentDiceRolledPlayerUid);
-      if (currentTurnPlayer) {
-        this.currentTurnPlayerName = currentTurnPlayer.name;
+    if (currentDiceRolledPlayerUid) {
+      this.itsMyTurn = this.sessionStorageService.keyValueIsEqualValue(
+        SessionStorageKeys.KEY_PLAYER_UID,
+        currentDiceRolledPlayerUid);
+
+      if (!this.itsMyTurn) {
+        const currentTurnPlayer = this.gameData.players.find(player => player.uid === currentDiceRolledPlayerUid);
+        if (currentTurnPlayer) {
+          this.currentTurnPlayerName = currentTurnPlayer.name;
+        }
+      } else {
+        this.currentTurnPlayerName = null;
       }
-    } else {
-      this.currentTurnPlayerName = null;
     }
 
     this.currentDiceNumber = currentDiceNumber;

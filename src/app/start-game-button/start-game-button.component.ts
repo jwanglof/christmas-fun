@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import {TimerService} from '../services/timer.service';
 import {FirestoreService} from '../services/firebase/firestore.service';
 import {ActivatedRoute} from '@angular/router';
+import {FirestoreGame} from '../services/firebase/models/game';
 
 @Component({
   selector: 'app-start-game-button',
@@ -9,7 +10,7 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./start-game-button.component.scss']
 })
 export class StartGameButtonComponent {
-  @Input() gameName!: string;
+  @Input() gameData!: FirestoreGame;
   gameIsStarted = false;
   gameHasEnded = false;
 
@@ -20,8 +21,9 @@ export class StartGameButtonComponent {
   ) { }
 
   startGame(): void {
-    this.firestoreService.startGame(this.gameName).subscribe(() => {
-      this.timerService.startBackgroundTimer(this.gameName);
+    const {name, lengthInSeconds} = this.gameData;
+    this.firestoreService.startGame(name).subscribe(() => {
+      this.timerService.startBackgroundTimer(name, lengthInSeconds);
     });
   }
 
