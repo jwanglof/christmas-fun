@@ -2,6 +2,7 @@
   <h1>Tärning</h1>
   <fa-icon (click)="diceClick()" [icon]="diceValues[currentDiceNumber]" size="10x"></fa-icon>
   <br>
+
   <span *ngIf="itsMyTurn">Din tur! Klicka för att rulla tärningen!</span>
   <span *ngIf="allowedToTakeGift">Härligt! Nu får du ta en julklapp!</span>
   <span *ngIf="allowedToLooseGift">Oj oj! Nu behöver du ge bort en julklapp :(</span>
