@@ -19,6 +19,7 @@ import { EndGameTextComponent } from './end-game-text/end-game-text.component';
 import { GiftsComponent } from './gifts/gifts.component';
 import { GiftComponent } from './gifts/gift/gift.component';
 import { PlayFieldGiftComponent } from './user/play-field/play-field-gift/play-field-gift.component';
+import { UploadGiftFormComponent } from './user/play-field/upload-gift-form/upload-gift-form.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { PlayFieldGiftComponent } from './user/play-field/play-field-gift/play-f
     EndGameTextComponent,
     GiftsComponent,
     GiftComponent,
-    PlayFieldGiftComponent
+    PlayFieldGiftComponent,
+    UploadGiftFormComponent
   ],
   imports: [
     BrowserModule,

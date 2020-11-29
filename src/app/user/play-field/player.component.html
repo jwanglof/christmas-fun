@@ -7,5 +7,8 @@
                            [gift]="gift"
                            [gameData]="gameData"></app-play-field-gift>
     </div>
+    <div class="row" *ngIf="thisIsPlayer && !thisPlayerHaveAGift">
+      <app-upload-gift-form [gameData]="gameData"></app-upload-gift-form>
+    </div>
   </div>
 </div>

@@ -29,11 +29,8 @@ export class PlayFieldGiftComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if (!this.gift || !this.gameData) {
-      return;
-    }
-
-    this.storageService.getPictureDownloadUrl(this.gift.pictureName)
+    const gameName = this.gameData.name;
+    this.storageService.getPictureDownloadUrl(gameName, this.gift.pictureName)
       .subscribe(downloadUrl => {
         this.giftDownloadUrl = downloadUrl;
       }, console.error);

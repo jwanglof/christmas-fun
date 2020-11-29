@@ -1,0 +1,11 @@
+<div class="col">
+  <form (ngSubmit)="submit()" class="text-center">
+    <label>
+    <input type="text" [(ngModel)]="giftName" id="giftName" name="giftNameValue" placeholder="Presentnamn"/>
+    </label>
+    <br>
+    <input type="file" (change)="onFileChange($event.target.files)" accept="image/*"/>
+    <br>
+    <button type="submit" class="btn btn-sm btn-primary" [disabled]="giftName === '' || file === null">Ladda upp</button>
+  </form>
+</div>

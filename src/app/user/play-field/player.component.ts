@@ -13,6 +13,7 @@ export class PlayerComponent implements OnInit {
   @Input() playerNumber!: number;
 
   thisIsPlayer = false;
+  thisPlayerHaveAGift = false;
   thisPlayerGifts: FirestoreGameGift[] = [];
 
   constructor(
@@ -22,6 +23,11 @@ export class PlayerComponent implements OnInit {
   ngOnInit(): void {
     this.thisIsPlayer = this.sessionStorageService.keyValueIsEqualValue(SessionStorageKeys.KEY_PLAYER_UID, this.playerData.uid);
     this._setThisPlayerGifts(this.playerData.uid);
+
+    const thisPlayerHaveAGift = this.gameData.gifts.find(gift => {
+      return gift.ownerPlayerUid === this.playerData.uid;
+    });
+    this.thisPlayerHaveAGift = !!thisPlayerHaveAGift;
   }
 
   private _setThisPlayerGifts(playerUid: string): void {

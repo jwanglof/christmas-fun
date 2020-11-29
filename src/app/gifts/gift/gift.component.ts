@@ -35,7 +35,8 @@ export class GiftComponent implements OnInit {
 
     const giftIsUpForTheTaking = this.gift.belongsTo === null;
     if (giftIsUpForTheTaking) {
-      this.storageService.getPictureDownloadUrl(this.gift.pictureName)
+      const gameName = this.gameData.name;
+      this.storageService.getPictureDownloadUrl(gameName, this.gift.pictureName)
         .subscribe(downloadUrl => {
           this.giftDownloadUrl = downloadUrl;
           this.giftIsUpForTheTaking = giftIsUpForTheTaking;

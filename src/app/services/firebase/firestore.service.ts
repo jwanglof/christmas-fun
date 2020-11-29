@@ -232,4 +232,23 @@ export class FirestoreService {
         .catch(err => observer.error(err));
     });
   }
+
+  addGiftToGame(gameName: string, ownerPlayerUid: string, pictureName: string, title: string): Observable<void> {
+    if (gameName === null || ownerPlayerUid === null || pictureName === null || title === null) {
+      return new Observable<void>(observer => observer.error('Null values!'));
+    }
+
+    return new Observable<void>(observer => {
+      const giftValue: FirestoreGameGift = {
+        ownerPlayerUid,
+        belongsTo: null,
+        uid: nanoid(),
+        pictureName,
+        title
+      };
+      this.GAME_CACHE[gameName].firestoreRef.update({gifts: firebase.firestore.FieldValue.arrayUnion(giftValue)})
+        .then(() => observer.next())
+        .catch(err => observer.error(err));
+    });
+  }
 }
