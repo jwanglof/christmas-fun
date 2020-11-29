@@ -1,4 +1,6 @@
 import {EventEmitter, Injectable} from '@angular/core';
+// @ts-ignore
+import random from 'random-number-js';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,7 @@ export class DiceService {
   }
 
   getNewDiceNumber(): number {
-    return Math.floor(Math.random() * (6 - 1 + 1)) + 1;
+    return random(1, 6);
   }
 
   sendDiceNumberChangedEvent(): void {
