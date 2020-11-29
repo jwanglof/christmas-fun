@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import firebase from 'firebase/app';
 import {FirestoreGame, FirestoreGameDiceValues, FirestoreGameGift, FirestoreGamePlayer} from './models/game';
 import {defer, from, Observable} from 'rxjs';
-import { nanoid } from 'nanoid';
-import DocumentReference = firebase.firestore.DocumentReference;
-import DocumentData = firebase.firestore.DocumentData;
-import QuerySnapshot = firebase.firestore.QuerySnapshot;
+import {nanoid} from 'nanoid';
 import {DiceService} from '../dice.service';
 import {SessionStorageKeys, SessionStorageService} from '../session-storage.service';
 import {FirebaseService} from './firebase.service';
+import DocumentReference = firebase.firestore.DocumentReference;
+import DocumentData = firebase.firestore.DocumentData;
+import QuerySnapshot = firebase.firestore.QuerySnapshot;
 
 interface GameGameCache {
   firestoreId: string;
@@ -44,9 +44,10 @@ export class FirestoreService {
       deleted: false,
       ended: false,
       started: false,
+      lengthInSeconds: 600,
       dice: {
         currentDiceNumber: 1,
-        currentDiceRolledPlayerUid: '',
+        currentDiceRolledPlayerUid: null,
       },
       players: [],
       gifts: [],
@@ -149,7 +150,11 @@ export class FirestoreService {
 
     return new Observable<FirestoreGamePlayer>(observer => {
       this.GAME_CACHE[gameName].firestoreRef.update(endedObject)
-        .then(() => observer.next())
+        .then(() => {
+          this.sessionStorageService.deleteValue(SessionStorageKeys.KEY_PLAYER_UID);
+          this.sessionStorageService.deleteValue(SessionStorageKeys.KEY_GAME_UID);
+          observer.next();
+        })
         .catch(err => observer.error(err));
     });
   }

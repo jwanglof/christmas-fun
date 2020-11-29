@@ -20,6 +20,9 @@ import { GiftsComponent } from './gifts/gifts.component';
 import { GiftComponent } from './gifts/gift/gift.component';
 import { PlayFieldGiftComponent } from './user/play-field/play-field-gift/play-field-gift.component';
 import { UploadGiftFormComponent } from './user/play-field/upload-gift-form/upload-gift-form.component';
+import { RulesComponent } from './rules/rules.component';
+import {RulesModalComponent} from './rules/rules-modal.component';
+import { GoToStartedGameModalComponent } from './hej/go-to-started-game-modal/go-to-started-game-modal.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +40,10 @@ import { UploadGiftFormComponent } from './user/play-field/upload-gift-form/uplo
     GiftsComponent,
     GiftComponent,
     PlayFieldGiftComponent,
-    UploadGiftFormComponent
+    UploadGiftFormComponent,
+    RulesComponent,
+    RulesModalComponent,
+    GoToStartedGameModalComponent
   ],
   imports: [
     BrowserModule,

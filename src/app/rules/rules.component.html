@@ -1,0 +1,18 @@
+<div [ngClass]="{'modal-body': isModal}">
+  <h1>Regler</h1>
+  Spelet går ut på att få så många julklappar som möjligt på ett antal minuter.
+  <br>
+
+  <h2>Tärningen</h2>
+  Det finns en vanlig tärning under spelets gång som kommer ha en siffra mellan 1 och 6. Reglerna för tärningen är enkla:
+  <ul>
+    <li>Om du slår en 1:a måste du lämna ifrån dig en valfri klapp (<i>om du har några</i>)</li>
+    <li>Om du får en 6:a får du ta en valfri klapp; antigen från julklappshögen eller från valfri annan spelare</li>
+  </ul>
+
+  <h2>Du som spelare</h2>
+  Du måste ha en bild på den julklapp du har köpt eftersom denna bild kommer laddas upp så alla ser vad det är för slags julklapp. När det är din tur kommer det stå på spelplanen, tänk på att om ni är 8 spelare kan ta det ta en stund innan det blir din tur igen. Bara att vänta och hoppas att ingen snor dina julklappar!
+</div>
+<div *ngIf="isModal" class="modal-footer">
+  <button type="button" class="btn btn-primary" (click)="activeModal.close()">Stäng</button>
+</div>

@@ -27,7 +27,15 @@
           </div>
           <div class="col-4 text-center">
             <div *ngIf="!gameData.started && !gameData.ended && !thisIsFirstPlayer">
-              Vänta en stund tills alla spelare har anslutit. Det är den första spelaren som startar spelet! :)
+              <table class="table table-bordered">
+                <tbody>
+                  <tr>
+                    <th>Spelets längd</th>
+                    <td>{{lengthInSeconds / 60}} minuter</td>
+                  </tr>
+                </tbody>
+              </table>
+              <button type="button" class="btn btn-lg btn-outline-primary" (click)="openRulesModal()">Läs regler</button>
             </div>
             <app-dice *ngIf="showTheDice" [gameData]="gameData"></app-dice>
             <app-end-game-text *ngIf="showTheEndText"></app-end-game-text>

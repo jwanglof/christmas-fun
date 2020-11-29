@@ -4,6 +4,7 @@ export interface FirestoreGame extends FirestoreBase {
   name: string;
   ended: boolean;
   started: boolean;
+  lengthInSeconds: number;
   dice: FirestoreGameDiceValues;
   players: FirestoreGamePlayer[];
   gifts: FirestoreGameGift[];
@@ -11,7 +12,7 @@ export interface FirestoreGame extends FirestoreBase {
 
 export interface FirestoreGameDiceValues {
   currentDiceNumber: number;
-  currentDiceRolledPlayerUid: string;
+  currentDiceRolledPlayerUid: string | null;
 }
 
 export interface FirestoreGamePlayer {

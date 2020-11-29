@@ -4,6 +4,8 @@ import {FirestoreService} from '../services/firebase/firestore.service';
 import {FirestoreGame, FirestoreGamePlayer} from '../services/firebase/models/game';
 import {faSnowflake} from '@fortawesome/free-solid-svg-icons';
 import {SessionStorageKeys, SessionStorageService} from '../services/session-storage.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {RulesModalComponent} from '../rules/rules-modal.component';
 
 @Component({
   selector: 'app-regular-game',
@@ -22,11 +24,13 @@ export class RegularGameComponent implements OnInit {
   thisIsFirstPlayer = false;
   showTheDice = false;
   showTheEndText = false;
+  lengthInSeconds = 0;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private firestore: FirestoreService,
     private sessionStorageService: SessionStorageService,
+    private modalService: NgbModal,
   ) { }
 
   ngOnInit(): void {
@@ -39,8 +43,12 @@ export class RegularGameComponent implements OnInit {
 
     this.firestore.getGame(this.gameName).subscribe(gameData => {
       gameData.firestoreRef.onSnapshot((doc: any) => {
-        const data = doc.data();
-        this.thisIsFirstPlayer = this.sessionStorageService.keyValueIsEqualValue(SessionStorageKeys.KEY_PLAYER_UID, data.players[0].uid);
+        const data: FirestoreGame = doc.data();
+        this.lengthInSeconds = data.lengthInSeconds;
+
+        if (data.players.length) {
+          this.thisIsFirstPlayer = this.sessionStorageService.keyValueIsEqualValue(SessionStorageKeys.KEY_PLAYER_UID, data.players[0].uid);
+        }
 
         if (data.started && !data.ended) {
           console.log('GAME HAS STARTED! SHOW THE DICE!');
@@ -58,6 +66,10 @@ export class RegularGameComponent implements OnInit {
     }, err => {
       console.error(err);
     });
+  }
+
+  openRulesModal(): void {
+    this.modalService.open(RulesModalComponent, {backdrop: 'static'});
   }
 
   private _getPlayerDataOrEmpty(players: FirestoreGamePlayer[]): (FirestoreGamePlayer | null)[] {

@@ -1,13 +1,16 @@
-<div class="container">
+<div class="container mt-4">
   <div class="row">
     <div class="col">
-      <h1>Hej och god jul!</h1>
-      Du har kommit till min sida för julklappsleken. Du borde ha fått ett spelnamn.
-      <br>
-      Det kan du skriva in här, och trycka på din enterknapp (eller klicka på knappen):
-      <br>
-      Det är alltid första spelaren som startar spelet.
-      <br>
+      <h1>Hej! 👋</h1>
+      <p>
+        Välkommen till en variant av en julklappslek som vi i familjen kallar "Tärningsleken".
+      </p>
+      <p>
+        Se till att läs reglerna innan du går med i ett spel (du kan läsa dessa när du har gått med i ett spel också).
+      </p>
+      <p>
+        Du borde ha fått ett spelnamn som du ska skriva in här, och sen trycka på knappen, för att gå med i spelet.
+      </p>
 
       <ngb-alert [dismissible]="false" *ngIf="gameInvalid">
         Felaktigt spelnamn!
@@ -21,9 +24,8 @@
         </div>
         <button type="submit" class="btn btn-primary">Gå med i spelet</button>
       </form>
-
-      <h2>Regler</h2>
-      Här borde en massa regler finnas. Tjohej!
+      <hr>
+      <app-rules></app-rules>
     </div>
   </div>
 </div>

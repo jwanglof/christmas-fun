@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 
 export enum SessionStorageKeys {
   KEY_PLAYER_UID = 'cf-player-uid',
-  KEY_GAME_UID = 'cf-game-uid',  // TODO Check if this has a value, show a modal and ask if the user wants to
-                                 //  enter the game IF it's not ended!
+  KEY_GAME_UID = 'cf-game-uid',
 }
 
 @Injectable({
@@ -23,5 +22,9 @@ export class SessionStorageService {
 
   setValue(key: SessionStorageKeys, value: string): void {
     sessionStorage.setItem(key, value);
+  }
+
+  deleteValue(key: SessionStorageKeys): void {
+    sessionStorage.removeItem(key);
   }
 }

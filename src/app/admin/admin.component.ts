@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {FirestoreService} from '../services/firebase/firestore.service';
 import {FirestoreGame} from '../services/firebase/models/game';
+// @ts-ignore
+import {word} from 'mngen';
 
 @Component({
   selector: 'app-admin',
@@ -8,22 +10,19 @@ import {FirestoreGame} from '../services/firebase/models/game';
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements OnInit {
-  gameNameValue = '';
+  gameNameValue = word(3);
   allGames: FirestoreGame[] = [];
-  firestore: FirestoreService;
 
   constructor(
-    firestoreService: FirestoreService
-  ) {
-    this.firestore = firestoreService;
-  }
+    private firestoreService: FirestoreService
+  ) {}
 
   ngOnInit(): void {
     this.getAllGames();
   }
 
   createNewGame(): void {
-    this.firestore.createNewGame(this.gameNameValue)
+    this.firestoreService.createNewGame(this.gameNameValue)
       .subscribe((gameData: FirestoreGame) => {
         console.log('Game data:', gameData);
       }, err => {
@@ -32,7 +31,7 @@ export class AdminComponent implements OnInit {
   }
 
   getAllGames(): void {
-    this.firestore.getAllGames()
+    this.firestoreService.getAllGames()
       .subscribe(querySnapshot => {
         querySnapshot.forEach((gameDoc: any) => {
           console.log(gameDoc.id, gameDoc.data());

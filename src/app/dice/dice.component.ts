@@ -32,6 +32,8 @@ export class DiceComponent implements OnInit, OnChanges {
   allowedToTakeGift = false;
   allowedToLooseGift = false;
 
+  currentTurnPlayerName: string | null = null;
+
   // gameHasStarted = false;
   // gameHasEnded = false;
 
@@ -56,13 +58,20 @@ export class DiceComponent implements OnInit, OnChanges {
   }
 
   private _checkIfItsMyTurn(): void {
-    if (!this.gameData) {
-      return;
-    }
     const {currentDiceRolledPlayerUid, currentDiceNumber} = this.gameData.dice;
     this.itsMyTurn = this.sessionStorageService.keyValueIsEqualValue(
       SessionStorageKeys.KEY_PLAYER_UID,
       currentDiceRolledPlayerUid);
+
+    if (!this.itsMyTurn) {
+      const currentTurnPlayer = this.gameData.players.find(player => player.uid === currentDiceRolledPlayerUid);
+      if (currentTurnPlayer) {
+        this.currentTurnPlayerName = currentTurnPlayer.name;
+      }
+    } else {
+      this.currentTurnPlayerName = null;
+    }
+
     this.currentDiceNumber = currentDiceNumber;
   }
 
@@ -74,7 +83,7 @@ export class DiceComponent implements OnInit, OnChanges {
   }
 
   diceClick(): void {
-    if (this.itsMyTurn && this.gameData) {
+    if (this.itsMyTurn) {
       this.itsMyTurn = false;
       const newDiceNumber = this.diceService.getNewDiceNumber();
 
