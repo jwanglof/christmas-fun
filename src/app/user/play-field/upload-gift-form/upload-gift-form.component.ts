@@ -42,8 +42,11 @@ export class UploadGiftFormComponent implements OnInit {
     }
   }
 
-  onFileChange(files: File[]): void {
-    console.log(1111, files);
-    this.file = files[0];
+  onFileChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    console.log(1111, target.files);
+    if (target.files && target.files.length) {
+      this.file = target.files[0];
+    }
   }
 }
