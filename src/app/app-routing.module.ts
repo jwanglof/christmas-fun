@@ -3,7 +3,7 @@ import {Routes, RouterModule, Route} from '@angular/router';
 import {AdminComponent} from './admin/admin.component';
 import {GameEngineComponent} from './game-engine/game-engine.component';
 import {AdminGameComponent} from './admin/game/admin-game.component';
-import {WelcomeComponent} from './hej/welcome.component';
+import {WelcomeComponent} from './welcome/welcome.component';
 
 const adminRoute: Route = {
   path: 'admin',

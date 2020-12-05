@@ -6,12 +6,12 @@
       {{playerData && playerData.name}}
     </h5>
     <div class="row">
-      <app-play-field-gift class="col-6"
-                           *ngFor="let gift of thisPlayerGifts"
-                           [gift]="gift"
-                           [gameData]="gameData"
-                           [looseGiftDiceNumbers]="looseGiftDiceNumbers"
-                           [takeGiftDiceNumbers]="takeGiftDiceNumbers"></app-play-field-gift>
+      <app-player-gift class="col-6"
+                       *ngFor="let gift of thisPlayerGifts"
+                       [gift]="gift"
+                       [gameData]="gameData"
+                       [looseGiftDiceNumbers]="looseGiftDiceNumbers"
+                       [takeGiftDiceNumbers]="takeGiftDiceNumbers"></app-player-gift>
     </div>
     <div class="row" *ngIf="thisIsPlayer && !thisPlayerHaveAGift">
       <app-upload-gift-form [gameData]="gameData"></app-upload-gift-form>

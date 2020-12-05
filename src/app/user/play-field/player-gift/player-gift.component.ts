@@ -6,12 +6,11 @@ import {FirestoreService} from '../../../services/firebase/firestore.service';
 import {GameService} from '../../../services/game.service';
 
 @Component({
-  selector: 'app-play-field-gift',
-  templateUrl: './play-field-gift.component.html',
-  styleUrls: ['./play-field-gift.component.scss']
+  selector: 'app-player-gift',
+  templateUrl: './player-gift.component.html',
+  styleUrls: ['./player-gift.component.scss']
 })
-export class PlayFieldGiftComponent implements OnChanges {
-  // TODO Rename to PlayerGiftComponent
+export class PlayerGiftComponent implements OnChanges {
   @Input() gift!: FirestoreGameGift;
   @Input() gameData!: FirestoreGame;
   @Input() looseGiftDiceNumbers: number[] = [];
