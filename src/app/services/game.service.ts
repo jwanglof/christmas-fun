@@ -13,28 +13,20 @@ export class GameService {
   ) { }
 
   allowedToTakeGift(gift: FirestoreGameGift, gameData: FirestoreGame): boolean {
-    const {previousPlayerUid, currentDiceNumber} = gameData.dice;
     const currentPlayerUid = this.sessionStorageService.getValue(SessionStorageKeys.KEY_PLAYER_UID);
     const thisIsCurrentPlayerGift = currentPlayerUid === gift.belongsTo;
-    const gameHasEnded = gameData.ended;
-    const previousPlayerWasMe = currentPlayerUid === previousPlayerUid;
-    const allowedToTakeGift = currentDiceNumber === DiceService.DICE_NUMBER_TAKE_GIFT;
-    return !thisIsCurrentPlayerGift && !gameHasEnded && previousPlayerWasMe && allowedToTakeGift;
+    const commonChecks = this._getCommonChecks(DiceService.DICE_NUMBER_TAKE_GIFT, gameData);
+    return !thisIsCurrentPlayerGift && commonChecks;
   }
 
   allowedToLooseGift(gift: FirestoreGameGift, gameData: FirestoreGame): boolean {
-    const {previousPlayerUid, currentDiceNumber} = gameData.dice;
     const currentPlayerUid = this.sessionStorageService.getValue(SessionStorageKeys.KEY_PLAYER_UID);
     const thisIsCurrentPlayerGift = currentPlayerUid === gift.belongsTo;
-    const gameHasEnded = gameData.ended;
-    const previousPlayerWasMe = currentPlayerUid === previousPlayerUid;
-    const allowedToLooseGift = currentDiceNumber === DiceService.DICE_NUMBER_LOOSE_GIFT;
-    // const asd = this._checkCommons(DiceService.DICE_NUMBER_LOOSE_GIFT, gameData);
-    return thisIsCurrentPlayerGift && !gameHasEnded && previousPlayerWasMe && allowedToLooseGift;
+    const commonChecks = this._getCommonChecks(DiceService.DICE_NUMBER_LOOSE_GIFT, gameData);
+    return thisIsCurrentPlayerGift && commonChecks;
   }
 
-  // TODO Add tests for this before changing!
-  private _checkCommons(diceNumberToCheck: number, gameData: FirestoreGame): boolean {
+  private _getCommonChecks(diceNumberToCheck: number, gameData: FirestoreGame): boolean {
     const currentPlayerUid = this.sessionStorageService.getValue(SessionStorageKeys.KEY_PLAYER_UID);
     const {previousPlayerUid, currentDiceNumber} = gameData.dice;
     const gameHasEnded = gameData.ended;
