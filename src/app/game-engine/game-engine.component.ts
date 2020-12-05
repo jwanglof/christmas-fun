@@ -8,12 +8,11 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {RulesModalComponent} from '../rules/rules-modal.component';
 
 @Component({
-  selector: 'app-regular-game',
-  templateUrl: './regular-game.component.html',
-  styleUrls: ['./regular-game.component.scss']
+  selector: 'app-game-engine',
+  templateUrl: './game-engine.component.html',
+  styleUrls: ['./game-engine.component.scss']
 })
-export class RegularGameComponent implements OnInit {
-  // TODO Rename to game-engine
+export class GameEngineComponent implements OnInit {
   gameName = '';
   gameData: FirestoreGame | undefined;
   gamePlayersFirstHalf: (FirestoreGamePlayer | null)[] = [];

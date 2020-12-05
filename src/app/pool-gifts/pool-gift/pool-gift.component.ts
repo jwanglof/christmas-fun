@@ -29,7 +29,6 @@ export class PoolGiftComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     const giftIsUpForTheTaking = this.gift.belongsTo === null;
     const {takeGiftDiceNumbers} = changes;
-    console.log('pool gift changes:', changes);
     if (giftIsUpForTheTaking) {
       const gameName = this.gameData.name;
       this.storageService.getPictureDownloadUrl(gameName, this.gift.pictureName)

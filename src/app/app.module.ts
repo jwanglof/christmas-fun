@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HejComponent } from './hej/hej.component';
+import { WelcomeComponent } from './hej/welcome.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserComponent } from './user/user.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -11,7 +11,7 @@ import { PlayerComponent } from './user/play-field/player.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DiceComponent } from './dice/dice.component';
 import { AdminComponent } from './admin/admin.component';
-import { RegularGameComponent } from './regular-game/regular-game.component';
+import { GameEngineComponent } from './game-engine/game-engine.component';
 import { AdminGameComponent } from './admin/game/admin-game.component';
 import { PlayerFormComponent } from './user/player-form/player-form.component';
 import { StartGameButtonComponent } from './start-game-button/start-game-button.component';
@@ -27,12 +27,12 @@ import { GoToStartedGameModalComponent } from './hej/go-to-started-game-modal/go
 @NgModule({
   declarations: [
     AppComponent,
-    HejComponent,
+    WelcomeComponent,
     UserComponent,
     PlayerComponent,
     DiceComponent,
     AdminComponent,
-    RegularGameComponent,
+    GameEngineComponent,
     AdminGameComponent,
     PlayerFormComponent,
     StartGameButtonComponent,

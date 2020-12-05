@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import {Routes, RouterModule, Route} from '@angular/router';
 import {AdminComponent} from './admin/admin.component';
-import {RegularGameComponent} from './regular-game/regular-game.component';
+import {GameEngineComponent} from './game-engine/game-engine.component';
 import {AdminGameComponent} from './admin/game/admin-game.component';
-import {HejComponent} from './hej/hej.component';
+import {WelcomeComponent} from './hej/welcome.component';
 
 const adminRoute: Route = {
   path: 'admin',
@@ -15,11 +15,11 @@ const adminGameRoute: Route = {
 };
 const gameNameRoute: Route = {
   path: 'game/:gameName',
-  component: RegularGameComponent
+  component: GameEngineComponent
 };
 const allCatch: Route = {
   path: '**',
-  component: HejComponent
+  component: WelcomeComponent
 };
 const routes: Routes = [
   adminRoute,

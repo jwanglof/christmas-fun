@@ -6,11 +6,11 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {GoToStartedGameModalComponent} from './go-to-started-game-modal/go-to-started-game-modal.component';
 
 @Component({
-  selector: 'app-hej',
-  templateUrl: './hej.component.html',
-  styleUrls: ['./hej.component.scss']
+  selector: 'app-welcome',
+  templateUrl: './welcome.component.html',
+  styleUrls: ['./welcome.component.scss']
 })
-export class HejComponent implements OnInit {
+export class WelcomeComponent implements OnInit {
   gameNameValue = '';
   gameInvalid = false;
 
