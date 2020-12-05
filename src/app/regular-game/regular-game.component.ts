@@ -19,6 +19,9 @@ export class RegularGameComponent implements OnInit {
   gamePlayersFirstHalf: (FirestoreGamePlayer | null)[] = [];
   gamePlayersSecondHalf: (FirestoreGamePlayer | null)[] = [];
 
+  looseGiftDiceNumbers: number[] = [];
+  takeGiftDiceNumbers: number[] = [];
+
   faSnowflake = faSnowflake;
 
   thisIsFirstPlayer = false;
@@ -51,10 +54,9 @@ export class RegularGameComponent implements OnInit {
         }
 
         if (data.started && !data.ended) {
-          console.log('GAME HAS STARTED! SHOW THE DICE!');
           this.showTheDice = true;
+          this.showTheEndText = false;
         } else if (data.started && data.ended) {
-          console.log('GAME HAS ENDED! HIDE THE DICE!');
           this.showTheDice = false;
           this.showTheEndText = true;
         }
@@ -70,6 +72,14 @@ export class RegularGameComponent implements OnInit {
 
   openRulesModal(): void {
     this.modalService.open(RulesModalComponent, {backdrop: 'static'});
+  }
+
+  onLooseGiftEvent(diceNumber: number): void {
+    this.looseGiftDiceNumbers.push(diceNumber);
+  }
+
+  onTakeGiftEvent(diceNumber: number): void {
+    this.takeGiftDiceNumbers.push(diceNumber);
   }
 
   private _getPlayerDataOrEmpty(players: FirestoreGamePlayer[]): (FirestoreGamePlayer | null)[] {

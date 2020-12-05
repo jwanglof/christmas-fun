@@ -1,11 +1,10 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {faDiceFive, faDiceFour, faDiceOne, faDiceSix, faDiceThree, faDiceTwo} from '@fortawesome/free-solid-svg-icons';
 import {IconDefinition} from '@fortawesome/fontawesome-common-types';
 import {FirestoreService} from '../services/firebase/firestore.service';
 import {FirestoreGame} from '../services/firebase/models/game';
 import {SessionStorageKeys, SessionStorageService} from '../services/session-storage.service';
 import {DiceService} from '../services/dice.service';
-import {GiftService} from '../services/gift.service';
 
 
 @Component({
@@ -13,8 +12,10 @@ import {GiftService} from '../services/gift.service';
   templateUrl: './dice.component.html',
   styleUrls: ['./dice.component.scss']
 })
-export class DiceComponent implements OnInit, OnChanges {
+export class DiceComponent implements OnChanges {
   @Input() gameData!: FirestoreGame;
+  @Output() looseGiftEvent$: EventEmitter<number> = new EventEmitter<number>();
+  @Output() takeGiftEvent$: EventEmitter<number> = new EventEmitter<number>();
 
   diceValues: { [key: number]: IconDefinition; } = {
     1: faDiceOne,
@@ -27,8 +28,11 @@ export class DiceComponent implements OnInit, OnChanges {
 
   currentDiceNumber = 1;
   itsMyTurn = false;
+  itsMyTurnWaiting = false;
+  itsMyTurnWaitingText: string | null = null;
   allowedToTakeGift = false;
   allowedToLooseGift = false;
+  previousPlayerName: string | null = null;
 
   currentTurnPlayerName: string | null = null;
 
@@ -36,78 +40,137 @@ export class DiceComponent implements OnInit, OnChanges {
     private firestoreService: FirestoreService,
     private sessionStorageService: SessionStorageService,
     private diceService: DiceService,
-    private giftService: GiftService,
-  ) {
-    this.diceService.diceNumberChangedEvent$.subscribe(() => {
-      this.allowedToLooseGift = false;
-      this.allowedToTakeGift = false;
-    });
-  }
-
-  ngOnInit(): void {
-    this._checkIfItsMyTurn();
-  }
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    this._checkIfItsMyTurn();
-  }
-
-  private _checkIfItsMyTurn(): void {
-    const {currentDiceRolledPlayerUid, currentDiceNumber} = this.gameData.dice;
-
-    if (currentDiceRolledPlayerUid) {
-      this.itsMyTurn = this.sessionStorageService.keyValueIsEqualValue(
-        SessionStorageKeys.KEY_PLAYER_UID,
-        currentDiceRolledPlayerUid);
-
-      if (!this.itsMyTurn) {
-        const currentTurnPlayer = this.gameData.players.find(player => player.uid === currentDiceRolledPlayerUid);
-        if (currentTurnPlayer) {
-          this.currentTurnPlayerName = currentTurnPlayer.name;
-        }
-      } else {
-        this.currentTurnPlayerName = null;
-      }
-    }
+    const {currentDiceRolledPlayerUid, currentDiceNumber, waitUntilPreviousPlayerIsDone, previousPlayerUid} = this.gameData.dice;
 
     this.currentDiceNumber = currentDiceNumber;
+
+    // Reset all view variables
+    this.itsMyTurn = this._isItMyTurn();
+    this.itsMyTurnWaiting = waitUntilPreviousPlayerIsDone;
+    this.allowedToTakeGift = false;
+    this.allowedToLooseGift = false;
+    this.currentTurnPlayerName = null;
+    this.previousPlayerName = null;
+    this.itsMyTurnWaitingText = null;
+
+    if (waitUntilPreviousPlayerIsDone && !this._previousPlayerWasMe()) {
+      // Waiting on previous player to make a move
+      this._setWaitingText();
+      const prevPlayer = this.gameData.players.find(player => player.uid === previousPlayerUid);
+      if (prevPlayer) {
+        console.log('Waiting on previous player to make a move 222', prevPlayer);
+        this.previousPlayerName = prevPlayer.name;
+      } else {
+        this.previousPlayerName = 'Okänd';
+      }
+      return;
+    } else if (waitUntilPreviousPlayerIsDone) {
+      // Waiting for me to make a move
+      if (currentDiceNumber === DiceService.DICE_NUMBER_TAKE_GIFT) {
+        // My turn and I will take a gift
+        this._checkIfICanTakeAGift(currentDiceNumber);
+      } else if (currentDiceNumber === DiceService.DICE_NUMBER_LOOSE_GIFT) {
+        // My turn and I will loose a gift
+        this._checkIfICanLooseAGift(currentDiceNumber);
+      }
+      return;
+    }
+
+    if (!this.itsMyTurn) {
+      this.allowedToTakeGift = false;
+      this.allowedToLooseGift = false;
+      const currentTurnPlayer = this.gameData.players.find(player => player.uid === currentDiceRolledPlayerUid);
+      if (currentTurnPlayer) {
+        this.currentTurnPlayerName = currentTurnPlayer.name;
+      }
+    }
   }
 
-  private _sendChangeDiceNumber(diceNumber: number): void {
-    this.firestoreService.changeDiceNumber(this.gameData.name, diceNumber)
+  private _setWaitingText(): void {
+    const {currentDiceNumber} = this.gameData.dice;
+
+    if (currentDiceNumber === DiceService.DICE_NUMBER_LOOSE_GIFT) {
+      this.itsMyTurnWaitingText = 'ge bort en present';
+    } else if (currentDiceNumber === DiceService.DICE_NUMBER_TAKE_GIFT) {
+      this.itsMyTurnWaitingText = 'ta en present';
+    }
+  }
+
+  private _checkIfICanTakeAGift(diceNumber: number): void {
+    // Can take a gift IF there are gift in the "pool" OR if any other players have gifts!
+    if (this._canITakeAGift()) {
+      this.allowedToTakeGift = true;
+      this.takeGiftEvent$.emit(diceNumber);
+    } else {
+      this.firestoreService.resetDicePreviousPlayerValues(this.gameData.name);
+    }
+  }
+
+  private _checkIfICanLooseAGift(diceNumber: number): void {
+    // Only send this event IF the current user have any gifts
+    if (this._canILooseAGift()) {
+      this.allowedToLooseGift = true;
+      this.looseGiftEvent$.emit(diceNumber);
+    } else {
+      this.firestoreService.resetDicePreviousPlayerValues(this.gameData.name);
+    }
+  }
+
+  private _canITakeAGift(): boolean {
+    const myUid = this.sessionStorageService.getValue(SessionStorageKeys.KEY_PLAYER_UID);
+    const giftsInPool = this.gameData.gifts.some(g => g.belongsTo === null);
+    const giftsExistOnOtherPlayers = this.gameData.gifts.some(g => g.belongsTo !== myUid && g.belongsTo !== null);
+    return giftsInPool || giftsExistOnOtherPlayers;
+  }
+
+  private _canILooseAGift(): boolean {
+    const myUid = this.sessionStorageService.getValue(SessionStorageKeys.KEY_PLAYER_UID);
+    const myGifts = this.gameData.gifts.filter(gift => gift.belongsTo === myUid);
+    return myGifts.length > 0;
+  }
+
+  private _previousPlayerWasMe(): boolean {
+    const {previousPlayerUid} = this.gameData.dice;
+    if (!previousPlayerUid) {
+      return false;
+    }
+    return this.sessionStorageService.keyValueIsEqualValue(SessionStorageKeys.KEY_PLAYER_UID, previousPlayerUid);
+  }
+
+  private _isItMyTurn(): boolean {
+    const {currentDiceRolledPlayerUid} = this.gameData.dice;
+    if (!currentDiceRolledPlayerUid) {
+      return false;
+    }
+    return this.sessionStorageService.keyValueIsEqualValue(
+      SessionStorageKeys.KEY_PLAYER_UID,
+      currentDiceRolledPlayerUid);
+  }
+
+  private _sendChangeDiceNumber(diceNumber: number, otherPlayersMustWaitForMe: boolean): void {
+    this.firestoreService.changeDiceNumber(this.gameData.name, diceNumber, otherPlayersMustWaitForMe)
       .subscribe(() => {
-        console.log('NENNENE::', diceNumber);
+        console.log('New diceNumber:', diceNumber);
       }, console.error);
   }
 
   diceClick(): void {
-    if (this.itsMyTurn) {
+    const {waitUntilPreviousPlayerIsDone} = this.gameData.dice;
+    if (this.itsMyTurn && !waitUntilPreviousPlayerIsDone) {
       this.itsMyTurn = false;
       const newDiceNumber = this.diceService.getNewDiceNumber();
 
-      this.currentDiceNumber = newDiceNumber;
-      const myUid = this.sessionStorageService.getValue(SessionStorageKeys.KEY_PLAYER_UID);
-
+      let otherPlayersMustWaitForMe = false;
       if (newDiceNumber === DiceService.DICE_NUMBER_TAKE_GIFT) {
-        // Only send this event IF THERE ARE GIFT IN THE "POOL" or IF ANY OTHER PLAYERS HAVE GIFTS!
-        const giftsInPool = this.gameData.gifts.some(g => g.belongsTo === null);
-        const giftsExistOnOtherPlayers = this.gameData.gifts.some(g => g.belongsTo !== myUid && g.belongsTo !== null);
-        if (giftsInPool || giftsExistOnOtherPlayers) {
-          this.allowedToTakeGift = true;
-          this.giftService.sendTakeGiftEvent(newDiceNumber);
-          return;
-        }
+        otherPlayersMustWaitForMe = this._canITakeAGift();
       } else if (newDiceNumber === DiceService.DICE_NUMBER_LOOSE_GIFT) {
-        // Only send this event IF THE CURRENT USER HAVE ANY GIFTS
-        const myGifts = this.gameData.gifts.filter(gift => gift.belongsTo === myUid);
-        if (myGifts.length) {
-          this.allowedToLooseGift = true;
-          this.giftService.sendLooseGiftEvent(newDiceNumber);
-          return;
-        }
+        otherPlayersMustWaitForMe = this._canILooseAGift();
       }
 
-      this._sendChangeDiceNumber(newDiceNumber);
+      this._sendChangeDiceNumber(newDiceNumber, otherPlayersMustWaitForMe);
     }
   }
 }

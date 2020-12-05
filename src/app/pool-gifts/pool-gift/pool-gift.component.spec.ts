@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GiftComponent } from './gift.component';
+import { PoolGiftComponent } from './pool-gift.component';
 
 describe('GiftComponent', () => {
-  let component: GiftComponent;
-  let fixture: ComponentFixture<GiftComponent>;
+  let component: PoolGiftComponent;
+  let fixture: ComponentFixture<PoolGiftComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GiftComponent ]
+      declarations: [ PoolGiftComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GiftComponent);
+    fixture = TestBed.createComponent(PoolGiftComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

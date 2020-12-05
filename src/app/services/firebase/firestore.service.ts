@@ -48,6 +48,8 @@ export class FirestoreService {
       dice: {
         currentDiceNumber: 1,
         currentDiceRolledPlayerUid: null,
+        waitUntilPreviousPlayerIsDone: false,
+        previousPlayerUid: null,
       },
       players: [],
       gifts: [],
@@ -125,7 +127,9 @@ export class FirestoreService {
         .then((gameData: any) => {
           const diceValues: FirestoreGameDiceValues = {
             currentDiceRolledPlayerUid: gameData.data().players[1].uid,
-            currentDiceNumber: this.diceService.getNewDiceNumber()
+            currentDiceNumber: this.diceService.getNewDiceNumber(),
+            waitUntilPreviousPlayerIsDone: false,
+            previousPlayerUid: null,
           };
           const newGameValues = {
             dice: diceValues,
@@ -159,7 +163,7 @@ export class FirestoreService {
     });
   }
 
-  changeDiceNumber(gameName: string, diceNumber: number): Observable<number> {
+  changeDiceNumber(gameName: string, diceNumber: number, otherPlayersMustWaitForMe: boolean): Observable<number> {
     if (gameName === null || this.GAME_CACHE[gameName] === null) {
       return new Observable<number>(observer => observer.error('Null values!'));
     }
@@ -180,15 +184,39 @@ export class FirestoreService {
 
           const newDiceValues: FirestoreGameDiceValues = {
             currentDiceNumber: diceNumber,
-            currentDiceRolledPlayerUid: nextPlayerData.uid
+            currentDiceRolledPlayerUid: nextPlayerData.uid,
+            waitUntilPreviousPlayerIsDone: otherPlayersMustWaitForMe,
+            previousPlayerUid: null,
           };
+          if (otherPlayersMustWaitForMe) {
+            newDiceValues.previousPlayerUid = this.sessionStorageService.getValue(SessionStorageKeys.KEY_PLAYER_UID);
+          }
+          console.log('newDiceValues:', newDiceValues);
 
           return this.GAME_CACHE[gameName].firestoreRef.update({dice: newDiceValues});
         })
         .then(() => {
-          this.diceService.sendDiceNumberChangedEvent();
           observer.next();
         })
+        .catch(err => observer.error(err));
+    });
+  }
+
+  resetDicePreviousPlayerValues(gameName: string): Observable<void> {
+    if (gameName === null || this.GAME_CACHE[gameName] === null) {
+      return new Observable<void>(observer => observer.error('Null values!'));
+    }
+
+    return new Observable<void>(observer => {
+      this.GAME_CACHE[gameName].firestoreRef.get()
+        .then(() => {
+          const updateData = {
+            'dice.previousPlayerUid': null,
+            'dice.waitUntilPreviousPlayerIsDone': false,
+          };
+          return this.GAME_CACHE[gameName].firestoreRef.update(updateData);
+        })
+        .then(() => observer.next())
         .catch(err => observer.error(err));
     });
   }
@@ -209,7 +237,13 @@ export class FirestoreService {
             }
             return g;
           });
-          return this.GAME_CACHE[gameName].firestoreRef.update({gifts: newGiftsValues});
+
+          const updateData = {
+            gifts: newGiftsValues,
+            'dice.previousPlayerUid': null,
+            'dice.waitUntilPreviousPlayerIsDone': false,
+          };
+          return this.GAME_CACHE[gameName].firestoreRef.update(updateData);
         })
         .then(() => observer.next())
         .catch(err => observer.error(err));
@@ -231,7 +265,13 @@ export class FirestoreService {
             }
             return g;
           });
-          return this.GAME_CACHE[gameName].firestoreRef.update({gifts: newGiftsValues});
+
+          const updateData = {
+            gifts: newGiftsValues,
+            'dice.previousPlayerUid': null,
+            'dice.waitUntilPreviousPlayerIsDone': false,
+          };
+          return this.GAME_CACHE[gameName].firestoreRef.update(updateData);
         })
         .then(() => observer.next())
         .catch(err => observer.error(err));

@@ -13,7 +13,11 @@
       <div class="container">
         <div class="row">
           <div class="col" *ngFor="let player of this.gamePlayersFirstHalf; let i=index">
-            <app-user [playerData]="player" [gameData]="gameData" [playerNumber]="i"></app-user>
+            <app-user [playerData]="player"
+                      [gameData]="gameData"
+                      [playerNumber]="i"
+                      [looseGiftDiceNumbers]="looseGiftDiceNumbers"
+                      [takeGiftDiceNumbers]="takeGiftDiceNumbers"></app-user>
           </div>
         </div>
       </div>
@@ -23,7 +27,8 @@
       <div class="container">
         <div class="row align-items-center">
           <div class="col-8">
-            <app-gifts [gameData]="gameData"></app-gifts>
+            <app-gifts [gameData]="gameData"
+                       [takeGiftDiceNumbers]="takeGiftDiceNumbers"></app-gifts>
           </div>
           <div class="col-4 text-center">
             <div *ngIf="!gameData.started && !gameData.ended && !thisIsFirstPlayer">
@@ -37,9 +42,13 @@
               </table>
               <button type="button" class="btn btn-lg btn-outline-primary" (click)="openRulesModal()">Läs regler</button>
             </div>
-            <app-dice *ngIf="showTheDice" [gameData]="gameData"></app-dice>
+            <app-dice *ngIf="showTheDice"
+                      [gameData]="gameData"
+                      (looseGiftEvent$)="onLooseGiftEvent($event)"
+                      (takeGiftEvent$)="onTakeGiftEvent($event)"></app-dice>
             <app-end-game-text *ngIf="showTheEndText"></app-end-game-text>
-            <app-start-game-button *ngIf="thisIsFirstPlayer && !showTheDice && !showTheEndText" [gameData]="gameData"></app-start-game-button>
+            <app-start-game-button *ngIf="thisIsFirstPlayer && !showTheDice && !showTheEndText"
+                                   [gameData]="gameData"></app-start-game-button>
           </div>
         </div>
       </div>
@@ -49,7 +58,11 @@
       <div class="container">
         <div class="row">
           <div class="col" *ngFor="let player of this.gamePlayersSecondHalf ; let i=index">
-            <app-user [playerData]="player" [gameData]="gameData" [playerNumber]="i+4"></app-user>
+            <app-user [playerData]="player"
+                      [gameData]="gameData"
+                      [playerNumber]="i+4"
+                      [looseGiftDiceNumbers]="looseGiftDiceNumbers"
+                      [takeGiftDiceNumbers]="takeGiftDiceNumbers"></app-user>
           </div>
         </div>
       </div>

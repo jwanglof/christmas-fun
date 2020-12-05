@@ -19,7 +19,7 @@ export class HejComponent implements OnInit {
     private router: Router,
     private sessionStorageService: SessionStorageService,
     private modalService: NgbModal,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this._checkIfPlayerHasAStartedGame();

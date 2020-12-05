@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {StorageService} from '../../../services/firebase/storage.service';
 import {FirestoreGame} from '../../../services/firebase/models/game';
 import {FirestoreService} from '../../../services/firebase/firestore.service';
@@ -9,7 +9,7 @@ import {SessionStorageKeys, SessionStorageService} from '../../../services/sessi
   templateUrl: './upload-gift-form.component.html',
   styleUrls: ['./upload-gift-form.component.scss']
 })
-export class UploadGiftFormComponent implements OnInit {
+export class UploadGiftFormComponent {
   @Input() gameData!: FirestoreGame;
 
   giftName = '';
@@ -21,16 +21,11 @@ export class UploadGiftFormComponent implements OnInit {
     private sessionStorageService: SessionStorageService,
   ) { }
 
-  ngOnInit(): void {
-    console.log(333, this.file);
-  }
-
   submit(): void {
     if (this.file) {
       console.log('Submit', this.file, this.gameData, this.giftName);
       this.storageService.uploadPicture(this.gameData.name, this.giftName, this.file)
         .subscribe((fileName) => {
-          console.log('SUCCESS!', fileName);
           const gameName = this.gameData.name;
           const ownerPlayerUid = this.sessionStorageService.getValue(SessionStorageKeys.KEY_PLAYER_UID);
           // tslint:disable-next-line:no-non-null-assertion
@@ -44,7 +39,6 @@ export class UploadGiftFormComponent implements OnInit {
 
   onFileChange(event: Event): void {
     const target = event.target as HTMLInputElement;
-    console.log(1111, target.files);
     if (target.files && target.files.length) {
       this.file = target.files[0];
     }

@@ -16,8 +16,8 @@ import { AdminGameComponent } from './admin/game/admin-game.component';
 import { PlayerFormComponent } from './user/player-form/player-form.component';
 import { StartGameButtonComponent } from './start-game-button/start-game-button.component';
 import { EndGameTextComponent } from './end-game-text/end-game-text.component';
-import { GiftsComponent } from './gifts/gifts.component';
-import { GiftComponent } from './gifts/gift/gift.component';
+import { PoolGiftsComponent } from './pool-gifts/pool-gifts.component';
+import { PoolGiftComponent } from './pool-gifts/pool-gift/pool-gift.component';
 import { PlayFieldGiftComponent } from './user/play-field/play-field-gift/play-field-gift.component';
 import { UploadGiftFormComponent } from './user/play-field/upload-gift-form/upload-gift-form.component';
 import { RulesComponent } from './rules/rules.component';
@@ -37,8 +37,8 @@ import { GoToStartedGameModalComponent } from './hej/go-to-started-game-modal/go
     PlayerFormComponent,
     StartGameButtonComponent,
     EndGameTextComponent,
-    GiftsComponent,
-    GiftComponent,
+    PoolGiftsComponent,
+    PoolGiftComponent,
     PlayFieldGiftComponent,
     UploadGiftFormComponent,
     RulesComponent,

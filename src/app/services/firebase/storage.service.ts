@@ -21,12 +21,6 @@ export class StorageService {
     this.storage = this.firebaseService.getFirebaseApp().storage().ref().child('pictures');
   }
 
-  getPictureRef(pictureName: string): Observable<firebase.storage.Reference> {
-    return new Observable<firebase.storage.Reference>(observer => {
-      observer.next(this.storage.child(pictureName));
-    });
-  }
-
   getPictureDownloadUrl(gameName: string, pictureName: string): Observable<string> {
     if (this.pictureDownloadUrlCache[pictureName]) {
       return new Observable<string>(observer => observer.next(this.pictureDownloadUrlCache[pictureName]));

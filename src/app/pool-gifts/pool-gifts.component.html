@@ -1,0 +1,7 @@
+<div class="row">
+  <app-gift *ngFor="let gift of poolGifts"
+            [gift]="gift"
+            [gameData]="gameData"
+            [takeGiftDiceNumbers]="takeGiftDiceNumbers"
+            class="col-3"></app-gift>
+</div>

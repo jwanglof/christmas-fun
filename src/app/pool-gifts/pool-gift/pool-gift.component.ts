@@ -1,18 +1,18 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {FirestoreGame, FirestoreGameGift} from '../../services/firebase/models/game';
 import {StorageService} from '../../services/firebase/storage.service';
 import {FirestoreService} from '../../services/firebase/firestore.service';
 import {GameService} from '../../services/game.service';
-import {GiftService} from '../../services/gift.service';
 
 @Component({
   selector: 'app-gift',
-  templateUrl: './gift.component.html',
-  styleUrls: ['./gift.component.scss']
+  templateUrl: './pool-gift.component.html',
+  styleUrls: ['./pool-gift.component.scss']
 })
-export class GiftComponent implements OnInit {
+export class PoolGiftComponent implements OnChanges {
   @Input() gift!: FirestoreGameGift;
   @Input() gameData!: FirestoreGame;
+  @Input() takeGiftDiceNumbers: number[] = [];
 
   giftDownloadUrl: string | undefined;
 
@@ -24,16 +24,12 @@ export class GiftComponent implements OnInit {
     private storageService: StorageService,
     private firestoreService: FirestoreService,
     private gameService: GameService,
-    private giftService: GiftService,
-  ) { }
+  ) {}
 
-  ngOnInit(): void {
-    this.giftService.takeGiftEvent$.subscribe((diceNumber: number) => {
-      this.allowedToTakeGift = this.gameService.allowedToTakeGift(this.gift, this.gameData, diceNumber);
-      this.diceNumber = diceNumber;
-    });
-
+  ngOnChanges(changes: SimpleChanges): void {
     const giftIsUpForTheTaking = this.gift.belongsTo === null;
+    const {takeGiftDiceNumbers} = changes;
+    console.log('pool gift changes:', changes);
     if (giftIsUpForTheTaking) {
       const gameName = this.gameData.name;
       this.storageService.getPictureDownloadUrl(gameName, this.gift.pictureName)
@@ -42,15 +38,23 @@ export class GiftComponent implements OnInit {
           this.giftIsUpForTheTaking = giftIsUpForTheTaking;
         }, console.error);
     }
+
+
+    if (takeGiftDiceNumbers.firstChange && takeGiftDiceNumbers.currentValue.length >= 0) {
+      this._checkIfAllowedToTakeGift();
+    } else if (takeGiftDiceNumbers.currentValue.length > takeGiftDiceNumbers.previousValue.length) {
+      this._checkIfAllowedToTakeGift();
+    }
+  }
+
+  private _checkIfAllowedToTakeGift(): void {
+    this.allowedToTakeGift = this.gameService.allowedToTakeGift(this.gift, this.gameData);
   }
 
   takeGift(): void {
     this.firestoreService.takeGift(this.gameData.name, this.gift.uid)
       .subscribe(() => {
-        this.firestoreService.changeDiceNumber(this.gameData.name, this.diceNumber)
-          .subscribe(() => {
-            console.log('NENNENE::', this.diceNumber);
-          }, console.error);
+          console.log('NENNENE::', this.diceNumber);
       });
   }
 

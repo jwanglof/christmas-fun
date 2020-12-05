@@ -12,27 +12,34 @@ export class GameService {
     private sessionStorageService: SessionStorageService,
   ) { }
 
-  allowedToTakeGift(gift: FirestoreGameGift, gameData: FirestoreGame, diceNumber?: number): boolean {
-    const {currentDiceRolledPlayerUid, currentDiceNumber} = gameData.dice;
-    const diceNumberToUse = diceNumber ? diceNumber : currentDiceNumber;
+  allowedToTakeGift(gift: FirestoreGameGift, gameData: FirestoreGame): boolean {
+    const {previousPlayerUid, currentDiceNumber} = gameData.dice;
     const currentPlayerUid = this.sessionStorageService.getValue(SessionStorageKeys.KEY_PLAYER_UID);
     const thisIsCurrentPlayerGift = currentPlayerUid === gift.belongsTo;
     const gameHasEnded = gameData.ended;
-    const currentPlayersTurn = currentPlayerUid === currentDiceRolledPlayerUid;
-    // TODO Remove this DICE NUMBER check
-    const allowedToTakeGift = diceNumberToUse === DiceService.DICE_NUMBER_TAKE_GIFT;
-    return !thisIsCurrentPlayerGift && !gameHasEnded && currentPlayersTurn && allowedToTakeGift;
+    const previousPlayerWasMe = currentPlayerUid === previousPlayerUid;
+    const allowedToTakeGift = currentDiceNumber === DiceService.DICE_NUMBER_TAKE_GIFT;
+    return !thisIsCurrentPlayerGift && !gameHasEnded && previousPlayerWasMe && allowedToTakeGift;
   }
 
-  allowedToLooseGift(gift: FirestoreGameGift, gameData: FirestoreGame, diceNumber?: number): boolean {
-    const {currentDiceRolledPlayerUid, currentDiceNumber} = gameData.dice;
-    const diceNumberToUse = diceNumber ? diceNumber : currentDiceNumber;
+  allowedToLooseGift(gift: FirestoreGameGift, gameData: FirestoreGame): boolean {
+    const {previousPlayerUid, currentDiceNumber} = gameData.dice;
     const currentPlayerUid = this.sessionStorageService.getValue(SessionStorageKeys.KEY_PLAYER_UID);
     const thisIsCurrentPlayerGift = currentPlayerUid === gift.belongsTo;
     const gameHasEnded = gameData.ended;
-    const currentPlayersTurn = currentPlayerUid === currentDiceRolledPlayerUid;
-    // TODO Remove this DICE NUMBER check
-    const allowedToLooseGift = diceNumberToUse === DiceService.DICE_NUMBER_LOOSE_GIFT;
-    return thisIsCurrentPlayerGift && !gameHasEnded && currentPlayersTurn && allowedToLooseGift;
+    const previousPlayerWasMe = currentPlayerUid === previousPlayerUid;
+    const allowedToLooseGift = currentDiceNumber === DiceService.DICE_NUMBER_LOOSE_GIFT;
+    // const asd = this._checkCommons(DiceService.DICE_NUMBER_LOOSE_GIFT, gameData);
+    return thisIsCurrentPlayerGift && !gameHasEnded && previousPlayerWasMe && allowedToLooseGift;
+  }
+
+  // TODO Add tests for this before changing!
+  private _checkCommons(diceNumberToCheck: number, gameData: FirestoreGame): boolean {
+    const currentPlayerUid = this.sessionStorageService.getValue(SessionStorageKeys.KEY_PLAYER_UID);
+    const {previousPlayerUid, currentDiceNumber} = gameData.dice;
+    const gameHasEnded = gameData.ended;
+    const previousPlayerWasMe = currentPlayerUid === previousPlayerUid;
+    const allowedToLooseGift = currentDiceNumber === diceNumberToCheck;
+    return !gameHasEnded && previousPlayerWasMe && allowedToLooseGift;
   }
 }

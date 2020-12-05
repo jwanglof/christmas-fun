@@ -1,11 +1,18 @@
-<div>
-  <h1>Tärning</h1>
-  <fa-icon (click)="diceClick()" [icon]="diceValues[currentDiceNumber]" size="10x"></fa-icon>
-  <br>
+<div class="row">
+  <div class="col-12">
+    <fa-icon (click)="diceClick()"
+             [icon]="diceValues[currentDiceNumber]"
+             size="10x"
+             [ngClass]="{'text-primary': (itsMyTurn && !itsMyTurnWaiting) || (allowedToTakeGift || allowedToLooseGift)}"></fa-icon>
+  </div>
 
-  <span *ngIf="itsMyTurn">Din tur! Klicka för att rulla tärningen!</span>
-  <span *ngIf="allowedToTakeGift">Härligt! Nu får du ta en julklapp!</span>
-  <span *ngIf="allowedToLooseGift">Oj oj! Nu behöver du ge bort en julklapp :(</span>
+  <div class="col-12 mt-3">
+    <p *ngIf="itsMyTurn && !itsMyTurnWaiting">Din tur! Klicka för att rulla tärningen!</p>
+    <p *ngIf="itsMyTurn && itsMyTurnWaiting">Din tur, men <strong>{{previousPlayerName}}</strong> måste först {{itsMyTurnWaitingText}}!</p>
 
-  <span *ngIf="!itsMyTurn && currentTurnPlayerName">Nu är det <strong>{{currentTurnPlayerName}}</strong> som ska rulla tärningen!</span>
+    <p *ngIf="allowedToTakeGift">Härligt! Nu får du ta en julklapp!</p>
+    <p *ngIf="allowedToLooseGift">Oj oj! Nu behöver du ge bort en julklapp :(</p>
+
+    <p *ngIf="!itsMyTurn && currentTurnPlayerName && (!allowedToTakeGift || !allowedToLooseGift)">Nu är det <strong>{{currentTurnPlayerName}}</strong> som ska rulla tärningen!</p>
+  </div>
 </div>

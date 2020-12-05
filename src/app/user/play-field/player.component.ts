@@ -11,6 +11,8 @@ export class PlayerComponent implements OnInit {
   @Input() playerData!: FirestoreGamePlayer;
   @Input() gameData!: FirestoreGame;
   @Input() playerNumber!: number;
+  @Input() looseGiftDiceNumbers: number[] = [];
+  @Input() takeGiftDiceNumbers: number[] = [];
 
   thisIsPlayer = false;
   thisPlayerHaveAGift = false;

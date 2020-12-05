@@ -10,6 +10,8 @@ export class UserComponent {
   @Input() playerData: FirestoreGamePlayer | null = null;
   @Input() gameData!: FirestoreGame;
   @Input() playerNumber!: number;
+  @Input() looseGiftDiceNumbers: number[] = [];
+  @Input() takeGiftDiceNumbers: number[] = [];
 
   constructor() {}
 }
