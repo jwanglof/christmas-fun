@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {Component, Input, OnChanges} from '@angular/core';
 import {FirestoreService} from '../../services/firebase/firestore.service';
 import {SessionStorageKeys, SessionStorageService} from '../../services/session-storage.service';
 import {FirestoreGame} from '../../services/firebase/models/game';
@@ -8,7 +8,7 @@ import {FirestoreGame} from '../../services/firebase/models/game';
   templateUrl: './player-form.component.html',
   styleUrls: ['./player-form.component.scss']
 })
-export class PlayerFormComponent implements OnInit, OnChanges {
+export class PlayerFormComponent implements OnChanges {
   @Input() gameData!: FirestoreGame;
 
   nameValue = '';
@@ -18,10 +18,6 @@ export class PlayerFormComponent implements OnInit, OnChanges {
     private firestoreService: FirestoreService,
     private sessionStorageService: SessionStorageService,
   ) { }
-
-  ngOnInit(): void {
-    this._checkIfPlayerIsSet();
-  }
 
   ngOnChanges(): void {
     this._checkIfPlayerIsSet();

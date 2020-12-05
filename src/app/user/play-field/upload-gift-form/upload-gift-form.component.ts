@@ -23,7 +23,6 @@ export class UploadGiftFormComponent {
 
   submit(): void {
     if (this.file) {
-      console.log('Submit', this.file, this.gameData, this.giftName);
       this.storageService.uploadPicture(this.gameData.name, this.giftName, this.file)
         .subscribe((fileName) => {
           const gameName = this.gameData.name;
