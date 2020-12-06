@@ -1,0 +1,5 @@
+<img class="avatar rounded-circle img-thumbnail bg-secondary w-100"
+     src="{{giftDownloadUrl}}"
+     alt="{{gift.title}} bild"
+     [ngClass]="{'gift-max-height': !smaller, 'gift-smaller-max-height': smaller}"
+     *ngIf="giftDownloadUrl !== undefined"/>

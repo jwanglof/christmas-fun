@@ -1,6 +1,6 @@
 <div class="card" [hidden]="!giftIsUpForTheTaking">
   <div class="card-body text-center">
-    <img class="avatar rounded-circle img-thumbnail w-100" src="{{giftDownloadUrl}}" alt="{{gift.title}} bild">
+    <app-gift-image [gameName]="gameData.name" [gift]="gift"></app-gift-image>
     <p class="card-title">{{gift.title}}</p>
     <button type="button"
             (click)="takeGift()"

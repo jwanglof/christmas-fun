@@ -23,6 +23,7 @@ import { UploadGiftFormComponent } from './user/play-field/upload-gift-form/uplo
 import { RulesComponent } from './rules/rules.component';
 import {RulesModalComponent} from './rules/rules-modal.component';
 import { GoToStartedGameModalComponent } from './welcome/go-to-started-game-modal/go-to-started-game-modal.component';
+import { GiftImageComponent } from './gift-image/gift-image.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { GoToStartedGameModalComponent } from './welcome/go-to-started-game-moda
     UploadGiftFormComponent,
     RulesComponent,
     RulesModalComponent,
-    GoToStartedGameModalComponent
+    GoToStartedGameModalComponent,
+    GiftImageComponent
   ],
   imports: [
     BrowserModule,
