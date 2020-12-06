@@ -36,7 +36,7 @@ export class FirestoreService {
     this.firestore = this.firebaseService.getFirebaseApp().firestore();
   }
 
-  createNewGame(name: string): Observable<FirestoreGame> {
+  createNewGame(name: string, lengthInSeconds: number): Observable<FirestoreGame> {
     const gameData: FirestoreGame = {
       name,
       created: Date.now(),
@@ -44,7 +44,7 @@ export class FirestoreService {
       deleted: false,
       ended: false,
       started: false,
-      lengthInSeconds: 600,
+      lengthInSeconds,
       dice: {
         currentDiceNumber: 1,
         currentDiceRolledPlayerUid: null,
@@ -79,6 +79,7 @@ export class FirestoreService {
   getAllGames(): Observable<any> {
     return defer(() => from(this.firestore.collection(this.COLLECTION_GAME)
       .where('ended', '==', false)
+      .where('deleted', '==', false)
       .get()));
   }
 

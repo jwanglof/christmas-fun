@@ -11,7 +11,9 @@ import {word} from 'mngen';
 })
 export class AdminComponent implements OnInit {
   gameNameValue = word(3);
+  gameLengthValue = 600;
   allGames: FirestoreGame[] = [];
+  disabled = false;
 
   constructor(
     private firestoreService: FirestoreService
@@ -22,12 +24,18 @@ export class AdminComponent implements OnInit {
   }
 
   createNewGame(): void {
-    this.firestoreService.createNewGame(this.gameNameValue)
-      .subscribe((gameData: FirestoreGame) => {
-        console.log('Game data:', gameData);
-      }, err => {
-        console.error(err);
-      });
+    if (this.gameNameValue !== '' && this.gameLengthValue > 0) {
+      this.disabled = true;
+      this.firestoreService.createNewGame(this.gameNameValue, this.gameLengthValue)
+        .subscribe((gameData: FirestoreGame) => {
+          console.log('Game data:', gameData);
+          this.allGames.push(gameData);
+          this.gameNameValue = word(3);
+          this.disabled = false;
+        }, err => {
+          console.error(err);
+        });
+    }
   }
 
   getAllGames(): void {

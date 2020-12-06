@@ -1,37 +1,44 @@
-<div class="row">
-  <div class="col">
-    <form (ngSubmit)="createNewGame()">
-      <h1>Skapa nytt spel</h1>
-      <div class="form-group row">
-        <label for="gameName" class="col-sm-2 col-form-label">Spelnamn</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="gameName" name="gameNameValue" placeholder="Spelnamn" [(ngModel)]="gameNameValue">
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <form (ngSubmit)="createNewGame()">
+        <h1>Skapa nytt spel</h1>
+        <div class="form-group row">
+          <label for="gameName" class="col-sm-5 col-form-label">Spelnamn</label>
+          <div class="col">
+            <input type="text" class="form-control" id="gameName" name="gameNameValue" placeholder="Spelnamn" [(ngModel)]="gameNameValue">
+          </div>
         </div>
-      </div>
-      <button type="submit" class="btn btn-primary">Skapa nytt spel</button>
-    </form>
-  </div>
-  <div class="col">
-    <h1>Alla spel</h1>
-    <table class="table">
-      <thead>
+        <div class="form-group row">
+          <label for="gameLength" class="col-sm-5 col-form-label">Spellängd i sekunder</label>
+          <div class="col">
+            <input type="number" class="form-control" id="gameLength" name="gameLengthValue" placeholder="Spellängd" [(ngModel)]="gameLengthValue">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="disabled">Skapa nytt spel</button>
+      </form>
+    </div>
+    <div class="col">
+      <h1>Oavslutade spel</h1>
+      <table class="table">
+        <thead>
         <tr>
           <td>Namn</td>
-          <td>Avslutad</td>
-          <td>Borttagen</td>
+          <td>Spellängd (sekunder)</td>
           <td>Skapad</td>
         </tr>
-      </thead>
-      <tr *ngFor="let game of allGames">
-        <td>
-          <a routerLink="/admin/game/{{game.name}}">
-            {{game.name}}
-          </a>
-        </td>
-        <td>{{game.ended}}</td>
-        <td>{{game.deleted}}</td>
-        <td>{{game.created | date}}</td>
-      </tr>
-    </table>
+        </thead>
+        <tr *ngFor="let game of allGames">
+          <td>
+            <a routerLink="/admin/game/{{game.name}}">
+              {{game.name}}
+            </a>
+          </td>
+          <td>{{game.lengthInSeconds}}</td>
+          <td>{{game.created | date:'yyyy-MM-dd HH:mm'}}</td>
+        </tr>
+      </table>
+    </div>
   </div>
+
 </div>
