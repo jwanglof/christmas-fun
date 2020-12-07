@@ -1,4 +1,4 @@
-<div class="container" *ngIf="!gameData">
+<div class="container" *ngIf="loading">
   <div class="row align-items-center">
     <div class="col text-center mt-5">
       <fa-icon [icon]="faSnowflake" [spin]="true" size="10x"></fa-icon>
@@ -7,7 +7,7 @@
   </div>
 </div>
 
-<div *ngIf="gameData" class="regular-game min-vh-100">
+<div *ngIf="!loading" class="regular-game min-vh-100">
   <div>
     <header class="header header-footer-base py-4 w-100">
       <div class="container">
@@ -47,8 +47,9 @@
                       (looseGiftEvent$)="onLooseGiftEvent($event)"
                       (takeGiftEvent$)="onTakeGiftEvent($event)"></app-dice>
             <app-end-game-text *ngIf="showTheEndText"></app-end-game-text>
-            <app-start-game-button *ngIf="thisIsFirstPlayer && !showTheDice && !showTheEndText"
-                                   [gameData]="gameData"></app-start-game-button>
+            <app-extended-text *ngIf="showTheExtendedText && !thisIsFirstPlayer"></app-extended-text>
+            <app-first-player *ngIf="thisIsFirstPlayer && !showTheDice && !showTheEndText"
+                              [gameData]="gameData"></app-first-player>
           </div>
         </div>
       </div>

@@ -51,6 +51,7 @@ export class PlayerGiftComponent implements OnChanges {
   private _loadingStarted(): void {
     this.buttonsDisabled = true;
   }
+
   private _loadingFinished(): void {
     this.buttonsDisabled = true;
     this.allowedToLooseGift = false;

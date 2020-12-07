@@ -14,8 +14,8 @@ import { AdminComponent } from './admin/admin.component';
 import { GameEngineComponent } from './game-engine/game-engine.component';
 import { AdminGameComponent } from './admin/game/admin-game.component';
 import { PlayerFormComponent } from './user/player-form/player-form.component';
-import { StartGameButtonComponent } from './start-game-button/start-game-button.component';
-import { EndGameTextComponent } from './end-game-text/end-game-text.component';
+import { StartGameButtonComponent } from './player/first-player/start-game-button/start-game-button.component';
+import { EndGameTextComponent } from './texts/end-game-text/end-game-text.component';
 import { PoolGiftsComponent } from './pool-gifts/pool-gifts.component';
 import { PoolGiftComponent } from './pool-gifts/pool-gift/pool-gift.component';
 import { PlayerGiftComponent } from './user/play-field/player-gift/player-gift.component';
@@ -24,6 +24,9 @@ import { RulesComponent } from './rules/rules.component';
 import {RulesModalComponent} from './rules/rules-modal.component';
 import { GoToStartedGameModalComponent } from './welcome/go-to-started-game-modal/go-to-started-game-modal.component';
 import { GiftImageComponent } from './gift-image/gift-image.component';
+import { ExtendedTextComponent } from './texts/extended-text/extended-text.component';
+import { FirstPlayerComponent } from './player/first-player/first-player.component';
+import { StartExtendedGameButtonComponent } from './player/first-player/start-extended-game-button/start-extended-game-button.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +48,10 @@ import { GiftImageComponent } from './gift-image/gift-image.component';
     RulesComponent,
     RulesModalComponent,
     GoToStartedGameModalComponent,
-    GiftImageComponent
+    GiftImageComponent,
+    ExtendedTextComponent,
+    FirstPlayerComponent,
+    StartExtendedGameButtonComponent
   ],
   imports: [
     BrowserModule,

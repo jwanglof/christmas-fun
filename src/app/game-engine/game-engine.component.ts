@@ -14,7 +14,7 @@ import {RulesModalComponent} from '../rules/rules-modal.component';
 })
 export class GameEngineComponent implements OnInit {
   gameName = '';
-  gameData: FirestoreGame | undefined;
+  gameData!: FirestoreGame;
   gamePlayersFirstHalf: (FirestoreGamePlayer | null)[] = [];
   gamePlayersSecondHalf: (FirestoreGamePlayer | null)[] = [];
 
@@ -26,7 +26,10 @@ export class GameEngineComponent implements OnInit {
   thisIsFirstPlayer = false;
   showTheDice = false;
   showTheEndText = false;
+  showTheExtendedText = false;
   lengthInSeconds = 0;
+
+  loading = true;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -52,17 +55,17 @@ export class GameEngineComponent implements OnInit {
           this.thisIsFirstPlayer = this.sessionStorageService.keyValueIsEqualValue(SessionStorageKeys.KEY_PLAYER_UID, data.players[0].uid);
         }
 
-        if (data.started && !data.ended) {
-          this.showTheDice = true;
-          this.showTheEndText = false;
-        } else if (data.started && data.ended) {
-          this.showTheDice = false;
-          this.showTheEndText = true;
-        }
-
         this.gamePlayersFirstHalf = this._getPlayerDataOrEmpty(data.players.slice(0, 4));
         this.gamePlayersSecondHalf = this._getPlayerDataOrEmpty(data.players.slice(4, 8));
         this.gameData = data;
+
+        if (data.started && !data.ended) {
+          this._gameHasStarted();
+        } else if (data.started && data.ended) {
+          this._gameHasEnded(data);
+        }
+
+        this.loading = false;
       });
     }, err => {
       console.error(err);
@@ -81,7 +84,7 @@ export class GameEngineComponent implements OnInit {
     this.takeGiftDiceNumbers.push(diceNumber);
   }
 
-  private _getPlayerDataOrEmpty(players: FirestoreGamePlayer[]): (FirestoreGamePlayer | null)[] {
+  protected _getPlayerDataOrEmpty(players: FirestoreGamePlayer[]): (FirestoreGamePlayer | null)[] {
     if (players.length === 4) {
       return players;
     }
@@ -90,5 +93,30 @@ export class GameEngineComponent implements OnInit {
       copyPlayers[i] = null;
     }
     return copyPlayers;
+  }
+
+  private _gameHasStarted(): void {
+    this.showTheDice = true;
+    this.showTheEndText = false;
+  }
+
+  private _gameHasEnded(gameData: FirestoreGame): void {
+    console.log('game has ended');
+    this.showTheDice = false;
+    if (!this._gameStillHavePresentsInPool(gameData)) {
+      this.showTheEndText = true;
+      return;
+    }
+
+    this.firestore.extendGame(gameData.name)
+      .subscribe(() => {
+        console.log('Extended game success!');
+        this.showTheExtendedText = true;
+      }, err => console.error(err));
+  }
+
+  protected _gameStillHavePresentsInPool(gameData: FirestoreGame): boolean {
+    console.log(gameData.gifts);
+    return gameData.gifts.filter(g => g.belongsTo === null).length > 0;
   }
 }

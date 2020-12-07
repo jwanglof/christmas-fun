@@ -44,6 +44,9 @@ export class FirestoreService {
       deleted: false,
       ended: false,
       started: false,
+      extendedGame: false,
+      extendedGameEnded: false,
+      extendedGameStarted: false,
       lengthInSeconds,
       dice: {
         currentDiceNumber: 1,
@@ -160,6 +163,22 @@ export class FirestoreService {
           this.sessionStorageService.deleteValue(SessionStorageKeys.KEY_GAME_UID);
           observer.next();
         })
+        .catch(err => observer.error(err));
+    });
+  }
+
+  extendGame(gameName: string): Observable<void> {
+    if (gameName === null || this.GAME_CACHE[gameName] === null) {
+      return new Observable<void>(observer => observer.error('Null values!'));
+    }
+
+    const extendedGame = {
+      extendedGame: true
+    };
+
+    return new Observable<void>(observer => {
+      this.GAME_CACHE[gameName].firestoreRef.update(extendedGame)
+        .then(() => observer.next())
         .catch(err => observer.error(err));
     });
   }

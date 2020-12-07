@@ -4,6 +4,9 @@ export interface FirestoreGame extends FirestoreBase {
   name: string;
   ended: boolean;
   started: boolean;
+  extendedGame: boolean;
+  extendedGameStarted: boolean;
+  extendedGameEnded: boolean;
   lengthInSeconds: number;
   dice: FirestoreGameDiceValues;
   players: FirestoreGamePlayer[];
