@@ -16,13 +16,13 @@ export class FirstPlayerComponent implements OnChanges {
 
   ngOnChanges(): void {
     const {extendedGame, ended, started} = this.gameData;
-    if (!extendedGame && !ended && started) {
-      this.showStartGameButton = true;
-      this.showExtendedGameButton = false;
+    if (extendedGame && ended && started) {
+      this.showStartGameButton = false;
+      this.showExtendedGameButton = true;
       return;
     }
-    this.showStartGameButton = false;
-    this.showExtendedGameButton = true;
+    this.showStartGameButton = true;
+    this.showExtendedGameButton = false;
   }
 
 }

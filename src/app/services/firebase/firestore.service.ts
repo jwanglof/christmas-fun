@@ -153,14 +153,11 @@ export class FirestoreService {
 
     const endedObject = {
       ended: true,
-      'dice.currentDiceRolledPlayerUid': null
     };
 
     return new Observable<FirestoreGamePlayer>(observer => {
       this.GAME_CACHE[gameName].firestoreRef.update(endedObject)
         .then(() => {
-          this.sessionStorageService.deleteValue(SessionStorageKeys.KEY_PLAYER_UID);
-          this.sessionStorageService.deleteValue(SessionStorageKeys.KEY_GAME_UID);
           observer.next();
         })
         .catch(err => observer.error(err));
@@ -174,6 +171,42 @@ export class FirestoreService {
 
     const extendedGame = {
       extendedGame: true
+    };
+
+    return new Observable<void>(observer => {
+      this.GAME_CACHE[gameName].firestoreRef.update(extendedGame)
+        .then(() => observer.next())
+        .catch(err => observer.error(err));
+    });
+  }
+
+  startExtendedGame(gameName: string): Observable<void> {
+    if (gameName === null || this.GAME_CACHE[gameName] === null) {
+      return new Observable<void>(observer => observer.error('Null values!'));
+    }
+
+    const extendedGame = {
+      extendedGameStarted: true,
+      'dice.previousPlayerUid': null,
+      'dice.waitUntilPreviousPlayerIsDone': false,
+    };
+
+    return new Observable<void>(observer => {
+      this.GAME_CACHE[gameName].firestoreRef.update(extendedGame)
+        .then(() => observer.next())
+        .catch(err => observer.error(err));
+    });
+  }
+
+  endExtendedGame(gameName: string): Observable<void> {
+    if (gameName === null || this.GAME_CACHE[gameName] === null) {
+      return new Observable<void>(observer => observer.error('Null values!'));
+    }
+
+    const extendedGame = {
+      extendedGameEnded: true,
+      'dice.previousPlayerUid': null,
+      'dice.waitUntilPreviousPlayerIsDone': false,
     };
 
     return new Observable<void>(observer => {

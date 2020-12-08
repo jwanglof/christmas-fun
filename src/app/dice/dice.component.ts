@@ -101,32 +101,43 @@ export class DiceComponent implements OnChanges {
 
   private _checkIfICanTakeAGift(diceNumber: number): void {
     // Can take a gift IF there are gift in the "pool" OR if any other players have gifts!
-    if (this._canITakeAGift()) {
-      this.allowedToTakeGift = true;
-      this.takeGiftEvent$.emit(diceNumber);
-    } else {
+    if (!this._canITakeAGift()) {
       this.firestoreService.resetDicePreviousPlayerValues(this.gameData.name);
     }
+
+    this.allowedToTakeGift = true;
+    this.takeGiftEvent$.emit(diceNumber);
   }
 
   private _checkIfICanLooseAGift(diceNumber: number): void {
     // Only send this event IF the current user have any gifts
-    if (this._canILooseAGift()) {
-      this.allowedToLooseGift = true;
-      this.looseGiftEvent$.emit(diceNumber);
-    } else {
+    if (!this._canILooseAGift()) {
       this.firestoreService.resetDicePreviousPlayerValues(this.gameData.name);
+      return;
     }
+
+    this.allowedToLooseGift = true;
+    this.looseGiftEvent$.emit(diceNumber);
   }
 
   private _canITakeAGift(): boolean {
     const myUid = this.sessionStorageService.getValue(SessionStorageKeys.KEY_PLAYER_UID);
     const giftsInPool = this.gameData.gifts.some(g => g.belongsTo === null);
+
+    // Can only take a gift if there are gifts in the pool if the extended game has started
+    if (this.gameData.extendedGameStarted) {
+      return giftsInPool;
+    }
+
     const giftsExistOnOtherPlayers = this.gameData.gifts.some(g => g.belongsTo !== myUid && g.belongsTo !== null);
     return giftsInPool || giftsExistOnOtherPlayers;
   }
 
   private _canILooseAGift(): boolean {
+    // Can never loose a gift if the extended game has started
+    if (this.gameData.extendedGameStarted) {
+      return false;
+    }
     const myUid = this.sessionStorageService.getValue(SessionStorageKeys.KEY_PLAYER_UID);
     const myGifts = this.gameData.gifts.filter(gift => gift.belongsTo === myUid);
     return myGifts.length > 0;

@@ -18,6 +18,9 @@ export class StartExtendedGameButtonComponent implements OnInit {
   }
 
   startExtendedGame(): void {
-    console.log('YOU ARE HERE!');
+    const {name} = this.gameData;
+    this.firestoreService.startExtendedGame(name).subscribe(() => {
+      console.log('Extended game started!');
+    });
   }
 }

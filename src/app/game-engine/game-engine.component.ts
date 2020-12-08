@@ -62,7 +62,16 @@ export class GameEngineComponent implements OnInit {
         if (data.started && !data.ended) {
           this._gameHasStarted();
         } else if (data.started && data.ended) {
-          this._gameHasEnded(data);
+          if (data.extendedGameStarted) {
+            if (this._gameStillHavePresentsInPool(data)) {
+              this.showTheExtendedText = false;
+              this._gameHasStarted();
+            } else {
+              this._extendedGameEnded(data);
+            }
+          } else {
+            this._gameHasEnded(data);
+          }
         }
 
         this.loading = false;
@@ -101,7 +110,6 @@ export class GameEngineComponent implements OnInit {
   }
 
   private _gameHasEnded(gameData: FirestoreGame): void {
-    console.log('game has ended');
     this.showTheDice = false;
     if (!this._gameStillHavePresentsInPool(gameData)) {
       this.showTheEndText = true;
@@ -110,8 +118,16 @@ export class GameEngineComponent implements OnInit {
 
     this.firestore.extendGame(gameData.name)
       .subscribe(() => {
-        console.log('Extended game success!');
         this.showTheExtendedText = true;
+      }, err => console.error(err));
+  }
+
+  private _extendedGameEnded(gameData: FirestoreGame): void {
+    this.showTheDice = false;
+
+    this.firestore.endExtendedGame(gameData.name)
+      .subscribe(() => {
+        this.showTheEndText = true;
       }, err => console.error(err));
   }
 
