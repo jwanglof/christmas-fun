@@ -30,16 +30,21 @@ export class PlayerGiftComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     const {takeGiftDiceNumbers} = changes;
-    const gameName = this.gameData.name;
-    this.storageService.getPictureDownloadUrl(gameName, this.gift.pictureName)
+
+    const {extendedGame, name} = this.gameData;
+
+    this.storageService.getPictureDownloadUrl(name, this.gift.pictureName)
       .subscribe(downloadUrl => {
         this.giftDownloadUrl = downloadUrl;
       }, console.error);
 
-    if (takeGiftDiceNumbers.firstChange && takeGiftDiceNumbers.currentValue.length >= 0) {
-      this._checkIfAllowedToTakeGift();
-    } else if (takeGiftDiceNumbers.currentValue.length > takeGiftDiceNumbers.previousValue.length) {
-      this._checkIfAllowedToTakeGift();
+    // When extended game is active, the player can only take gifts from pool
+    if (!extendedGame) {
+      const firstTime = takeGiftDiceNumbers.firstChange && takeGiftDiceNumbers.currentValue.length >= 0;
+      const changed = takeGiftDiceNumbers.currentValue.length > takeGiftDiceNumbers.previousValue.length;
+      if (firstTime || changed) {
+        this._checkIfAllowedToTakeGift();
+      }
     }
   }
 

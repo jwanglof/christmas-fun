@@ -1,11 +1,12 @@
 <div class="col">
   <form (ngSubmit)="submit()" class="text-center">
     <label>
-    <input type="text" [(ngModel)]="giftName" id="giftName" name="giftNameValue" placeholder="Presentnamn" class="form-control form-control-sm"/>
+    <input type="text" [(ngModel)]="giftName" id="giftName" name="giftNameValue" placeholder="Presentnamn" class="form-control form-control-sm" [disabled]="loading"/>
     </label>
     <br>
-    <input type="file" (change)="onFileChange($event)" accept="image/*"/>
+    <input type="file" (change)="onFileChange($event)" [disabled]="loading" accept="image/*"/>
     <br>
-    <button type="submit" class="btn btn-sm btn-primary" [disabled]="giftName === '' || file === null">Ladda upp</button>
+    <button type="submit" class="btn btn-sm btn-primary" [disabled]="giftName === '' || file === null" *ngIf="!loading">Ladda upp</button>
+    <fa-icon [icon]="faSnowflake" [spin]="true" size="3x" *ngIf="loading"></fa-icon>
   </form>
 </div>
