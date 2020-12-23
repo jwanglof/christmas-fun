@@ -8,7 +8,7 @@
 
   <div class="col-12 mt-3">
     <p *ngIf="itsMyTurn && !itsMyTurnWaiting">Din tur! Klicka för att rulla tärningen!</p>
-    <p *ngIf="itsMyTurn && itsMyTurnWaiting">Din tur, men <strong>{{previousPlayerName}}</strong> måste först {{itsMyTurnWaitingText}}!</p>
+    <p *ngIf="itsMyTurnWaitingText && itsMyTurnWaiting">Din tur, men <strong>{{previousPlayerName}}</strong> måste först {{itsMyTurnWaitingText}}!</p>
 
     <p *ngIf="allowedToTakeGift">Härligt! Nu får du ta en julklapp!</p>
     <p *ngIf="allowedToLooseGift">Oj oj! Nu behöver du ge bort en julklapp :(</p>

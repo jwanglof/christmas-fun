@@ -41,7 +41,10 @@ export class PlayerGiftComponent implements OnChanges {
     // When extended game is active, the player can only take gifts from pool
     if (!extendedGame) {
       const firstTime = takeGiftDiceNumbers.firstChange && takeGiftDiceNumbers.currentValue.length >= 0;
-      const changed = takeGiftDiceNumbers.currentValue.length > takeGiftDiceNumbers.previousValue.length;
+      let changed = false;
+      if (takeGiftDiceNumbers.previousValue && takeGiftDiceNumbers.previousValue.length) {
+        changed = takeGiftDiceNumbers.currentValue.length > takeGiftDiceNumbers.previousValue.length;
+      }
       if (firstTime || changed) {
         this._checkIfAllowedToTakeGift();
       }
